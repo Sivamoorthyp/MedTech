@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Voice Assistant | MindPulse</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
+    <!-- Main site styles for shared navbar -->
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        /* ─── Voice Assis Page Styles ─── */
+        :root {
+            --va-accent: #2563eb;
+            --va-primary: #1e293b;
+            --va-bg: #f8fafc;
+            --va-text: #0f172a;
+            --va-muted: #64748b;
+            --va-white: #ffffff;
+            --va-glass: rgba(255, 255, 255, 0.7);
+            --va-glass-border: rgba(255, 255, 255, 0.3);
+            --happy: #fbbf24;
+            --sad: #60a5fa;
+            --angry: #f87171;
+            --fear: #a78bfa;
+            --surprise: #34d399;
+        }
+
+        /* Page background override for voice assis */
+        .page-background {
+            background: radial-gradient(ellipse at 70% 20%, rgba(37, 99, 235, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 20% 80%, rgba(99, 102, 241, 0.08) 0%, transparent 60%),
+                linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+        }
+
+        /* VA container */
+        .va-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Back button bar */
+        .back-bar {
+            padding: 1rem 0 0 0;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 0.5rem 1.1rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.25s;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateX(-2px);
+        }
+
+        .back-btn svg {
+            flex-shrink: 0;
+        }
+
+        /* Background blobs */
+        .va-blobs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .va-blob {
+            position: absolute;
+            filter: blur(90px);
+            opacity: 0.15;
+            border-radius: 50%;
+        }
+
+        .va-blob-1 {
+            width: 600px;
+            height: 600px;
+            background: #3b82f6;
+            top: -200px;
+            right: -100px;
+            animation: vaFloat 20s infinite alternate;
+        }
+
+        .va-blob-2 {
+            width: 400px;
+            height: 400px;
+            background: #818cf8;
+            bottom: -100px;
+            left: -100px;
+            animation: vaFloat 15s infinite alternate-reverse;
+        }
+
+        @keyframes vaFloat {
+            from {
+                transform: translate(0, 0);
+            }
+
+            to {
+                transform: translate(50px, 100px);
+            }
+        }
+
+        /* Hero */
+        .va-hero {
+            padding: 3rem 0 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .va-hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .va-hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: #fff;
+        }
+
+        .va-hero-subtitle {
+            font-size: 1.15rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 2.5rem;
+            max-width: 480px;
+        }
+
+        /* Controls */
+        .va-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .va-btn {
+            padding: 0.8rem 1.6rem;
+            border-radius: 999px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .va-btn-primary {
+            background: linear-gradient(135deg, #2563eb, #4f46e5);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+        }
+
+        .va-btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.5);
+        }
+
+        .va-btn-primary.recording {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+            animation: vaPulse 1.5s infinite;
+        }
+
+        @keyframes vaPulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px rgba(239, 68, 68, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+            }
+        }
+
+        .va-btn-outline {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .va-btn-outline:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
+
+        .va-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* Status box */
+        .va-status-box {
+            margin-bottom: 2rem;
+        }
+
+        .va-status-text {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .va-status-text.recording {
+            color: #f87171;
+        }
+
+        .va-status-text.processing {
+            color: #60a5fa;
+        }
+
+        .va-status-text.speaking {
+            color: #34d399;
+        }
+
+        .va-volume-container {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            width: 220px;
+            overflow: hidden;
+        }
+
+        .va-volume-bar {
+            height: 100%;
+            background: var(--va-accent);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        /* Badges */
+        .va-meta {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .va-badge {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 0.3rem 0.85rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.55);
+        }
+
+        /* Chat Window */
+        .va-chat-window {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 24px;
+            height: 520px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .va-chat-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .va-current-emotion {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .va-emotion-bars {
+            display: flex;
+            gap: 6px;
+            width: 100%;
+        }
+
+        .va-emotion-mini-row {
+            flex: 1;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .va-bar-fill {
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+
+        .va-bar-fill.happy {
+            background: var(--happy);
+        }
+
+        .va-bar-fill.sad {
+            background: var(--sad);
+        }
+
+        .va-bar-fill.angry {
+            background: var(--angry);
+        }
+
+        .va-bar-fill.fear {
+            background: var(--fear);
+        }
+
+        .va-bar-fill.surprise {
+            background: var(--surprise);
+        }
+
+        .va-chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            scroll-behavior: smooth;
+        }
+
+        .va-chat-messages::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .va-chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .va-chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+        }
+
+        .va-empty-msg {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.35);
+            font-style: italic;
+            margin-top: 2rem;
+        }
+
+        /* Bubbles */
+        .va-message {
+            max-width: 85%;
+            display: flex;
+            flex-direction: column;
+            animation: vaSlideIn 0.3s ease-out;
+        }
+
+        @keyframes vaSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .va-message.user {
+            align-self: flex-end;
+        }
+
+        .va-message .va-bubble {
+            padding: 0.8rem 1.2rem;
+            border-radius: 18px;
+            font-size: 0.95rem;
+        }
+
+        .va-message.user .va-bubble {
+            background: linear-gradient(135deg, #2563eb, #4f46e5);
+            color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+
+        .va-message.assistant .va-bubble {
+            background: rgba(255, 255, 255, 0.09);
+            color: rgba(255, 255, 255, 0.85);
+            border-bottom-left-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .va-emotion-tag {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 0.2rem;
+            opacity: 0.7;
+        }
+
+        .va-time {
+            display: block;
+            font-size: 0.65rem;
+            margin-top: 0.3rem;
+            opacity: 0.45;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Typing indicator */
+        .va-typing {
+            display: flex;
+            gap: 4px;
+            padding: 10px 15px !important;
+        }
+
+        .va-typing span {
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            animation: vaBounce 1.4s infinite ease-in-out;
+        }
+
+        .va-typing span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .va-typing span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes vaBounce {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0);
+            }
+
+            40% {
+                transform: scale(1);
+            }
+        }
+
+        /* Footer section */
+        .va-footer {
+            padding: 2.5rem 0;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            position: relative;
+            z-index: 1;
+        }
+
+        .va-footer p {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.3);
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        .va-tech-logos {
+            display: flex;
+            justify-content: center;
+            gap: 3.5rem;
+            opacity: 0.25;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #fff;
+        }
+
+        /* Error Toast */
+        #va-errorToast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            z-index: 1000;
+            transition: transform 0.3s;
+        }
+
+        #va-errorToast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* New Session button in main navbar accent */
+        .va-new-session-btn {
+            background: rgba(255, 255, 255, 0.08) !important;
+            border: 1px solid rgba(255, 255, 255, 0.18) !important;
+            color: rgba(255, 255, 255, 0.75) !important;
+            font-size: 0.875rem !important;
+            padding: 0.55rem 1.2rem !important;
+        }
+
+        .va-new-session-btn:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+            color: #fff !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .va-hero-grid {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+                text-align: center;
+            }
+
+            .va-hero-subtitle {
+                margin: 0 auto 2.5rem;
+            }
+
+            .va-controls {
+                justify-content: center;
+            }
+
+            .va-status-box {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .va-meta {
+                justify-content: center;
+            }
+
+            .va-hero-title {
+                font-size: 2.6rem;
+            }
+
+            .va-tech-logos {
+                gap: 1.5rem;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Shared page background from style.css -->
+    <div class="page-background"></div>
+
+    <!-- Background blobs specific to VA page -->
+    <div class="va-blobs">
+        <div class="va-blob va-blob-1"></div>
+        <div class="va-blob va-blob-2"></div>
+    </div>
+
+    <!-- ─── Navbar (matches index.html) ─── -->
+    <header class="navbar fade-in-down">
+        <div class="logo">MindPulse</div>
+        <nav class="nav-links">
+            <a href="index.html#dashboard">Dashboard</a>
+            <a href="index.html#Chat">Chat</a>
+            <a href="voice_assis.html" class="active-nav-link">Speak</a>
+            <a href="index.html#API Keys">API Keys</a>
+            <a href="index.html#Counselling Appointment">Counselling Appointment</a>
+        </nav>
+        <div class="nav-actions">
+            <button class="btn btn-dark-rounded va-new-session-btn" id="resetBtn" onclick="resetConversation()">New
+                Session</button>
+        </div>
+        <button class="mobile-menu-btn" aria-label="Toggle Menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+    </header>
+
+    <main>
+        <div class="va-wrapper">
+            <!-- Back button -->
+            <div class="back-bar">
+                <a href="index.html" class="back-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                    Back to Home
+                </a>
+            </div>
+
+            <!-- Hero Grid -->
+            <section class="va-hero">
+                <div class="va-hero-grid">
+
+                    <!-- Left: Controls -->
+                    <div class="va-hero-content">
+                        <h1 class="va-hero-title">Emotional AI<br>Voice Assistant</h1>
+                        <p class="va-hero-subtitle">Designed for empathy, available 24/7. Your voice, heard and
+                            understood.</p>
+
+                        <div class="va-controls">
+                            <button id="recordBtn" class="va-btn va-btn-primary" onclick="startRecording()">
+                                <span>🎙️</span> Talk to Assistant
+                            </button>
+                            <button id="stopBtn" class="va-btn va-btn-outline" onclick="stopRecording()" disabled>
+                                Stop Listening
+                            </button>
+                        </div>
+
+                        <div class="va-status-box">
+                            <div id="statusText" class="va-status-text idle">Press start to begin</div>
+                            <div class="va-volume-container">
+                                <div id="volumeMeter" class="va-volume-bar"></div>
+                            </div>
+                        </div>
+
+                        <div class="va-meta">
+                            <span class="va-badge">Turns: <span id="turnCount">0</span></span>
+                            <span class="va-badge">Privacy Protected</span>
+                        </div>
+                    </div>
+
+                    <!-- Right: Chat window -->
+                    <div class="va-hero-preview">
+                        <div class="va-chat-window">
+                            <div class="va-chat-header">
+                                <div id="emotionDisplay" class="va-emotion-bars">
+                                    <div id="dominantEmotion" class="va-current-emotion">😐 Neutral</div>
+                                    <div class="va-emotion-mini-row" data-emotion="Happy">
+                                        <div class="va-bar-fill happy" style="width:0%"></div>
+                                    </div>
+                                    <div class="va-emotion-mini-row" data-emotion="Sad">
+                                        <div class="va-bar-fill sad" style="width:0%"></div>
+                                    </div>
+                                    <div class="va-emotion-mini-row" data-emotion="Angry">
+                                        <div class="va-bar-fill angry" style="width:0%"></div>
+                                    </div>
+                                    <div class="va-emotion-mini-row" data-emotion="Fear">
+                                        <div class="va-bar-fill fear" style="width:0%"></div>
+                                    </div>
+                                    <div class="va-emotion-mini-row" data-emotion="Surprise">
+                                        <div class="va-bar-fill surprise" style="width:0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="chatLog" class="va-chat-messages">
+                                <div class="va-empty-msg">How are you feeling today?</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="va-footer">
+        <div class="va-wrapper">
+            <p>Built with state-of-the-art AI technology</p>
+            <div class="va-tech-logos">
+                <span>Whisper V3</span>
+                <span>Claude 3.5</span>
+                <span>FastAPI</span>
+                <span>WebRTC</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Error Toast -->
+    <div id="va-errorToast"></div>
+
+    <script>
+        // ─── Stub functions (replace with real API calls when backend is running) ───
+
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let turnCount = 0;
+        let isRecording = false;
+
+        function showToast(msg) {
+            const toast = document.getElementById('va-errorToast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3500);
+        }
+
+        function setStatus(text, cls) {
+            const el = document.getElementById('statusText');
+            el.textContent = text;
+            el.className = 'va-status-text ' + (cls || 'idle');
+        }
+
+        function addMessage(role, text, emotion) {
+            const log = document.getElementById('chatLog');
+            // Clear empty placeholder
+            const empty = log.querySelector('.va-empty-msg');
+            if (empty) empty.remove();
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'va-message ' + role;
+
+            const bubble = document.createElement('div');
+            bubble.className = 'va-bubble';
+
+            if (emotion) {
+                const tag = document.createElement('span');
+                tag.className = 'va-emotion-tag';
+                tag.textContent = emotion;
+                bubble.appendChild(tag);
+            }
+
+            const textNode = document.createTextNode(text);
+            bubble.appendChild(textNode);
+
+            const time = document.createElement('span');
+            time.className = 'va-time';
+            time.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            bubble.appendChild(time);
+
+            wrapper.appendChild(bubble);
+            log.appendChild(wrapper);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function showTyping() {
+            const log = document.getElementById('chatLog');
+            const typing = document.createElement('div');
+            typing.className = 'va-message assistant';
+            typing.id = 'typingIndicator';
+            typing.innerHTML = '<div class="va-bubble va-typing"><span></span><span></span><span></span></div>';
+            log.appendChild(typing);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function hideTyping() {
+            const t = document.getElementById('typingIndicator');
+            if (t) t.remove();
+        }
+
+        async function startRecording() {
+            if (isRecording) return;
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                const analyser = new AudioContext().createAnalyser();
+                const source = analyser.context.createMediaStreamSource(stream);
+                source.connect(analyser);
+                analyser.fftSize = 256;
+                const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+                const volumeBar = document.getElementById('volumeMeter');
+
+                function updateVolume() {
+                    if (!isRecording) return;
+                    analyser.getByteFrequencyData(dataArray);
+                    const avg = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
+                    volumeBar.style.width = Math.min(avg * 2, 100) + '%';
+                    requestAnimationFrame(updateVolume);
+                }
+                updateVolume();
+
+                mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                mediaRecorder.onstop = async () => {
+                    volumeBar.style.width = '0%';
+                    const blob = new Blob(audioChunks, { type: 'audio/webm' });
+                    await sendAudio(blob);
+                };
+
+                mediaRecorder.start();
+                isRecording = true;
+
+                document.getElementById('recordBtn').classList.add('recording');
+                document.getElementById('recordBtn').innerHTML = '<span>⏺</span> Recording...';
+                document.getElementById('stopBtn').disabled = false;
+                setStatus('Recording — speak now', 'recording');
+            } catch (err) {
+                showToast('Microphone access denied. Please allow microphone permissions.');
+            }
+        }
+
+        function stopRecording() {
+            if (!isRecording || !mediaRecorder) return;
+            isRecording = false;
+            mediaRecorder.stop();
+            mediaRecorder.stream.getTracks().forEach(t => t.stop());
+
+            document.getElementById('recordBtn').classList.remove('recording');
+            document.getElementById('recordBtn').innerHTML = '<span>🎙️</span> Talk to Assistant';
+            document.getElementById('stopBtn').disabled = true;
+            setStatus('Processing...', 'processing');
+        }
+
+        async function sendAudio(blob) {
+            showTyping();
+            const formData = new FormData();
+            formData.append('audio', blob, 'recording.webm');
+
+            try {
+                const res = await fetch('/process_audio', { method: 'POST', body: formData });
+                hideTyping();
+
+                if (!res.ok) throw new Error('Server error: ' + res.status);
+
+                const data = await res.json();
+                turnCount++;
+                document.getElementById('turnCount').textContent = turnCount;
+
+                if (data.user_text) addMessage('user', data.user_text);
+                if (data.response) addMessage('assistant', data.response, data.emotion);
+
+                updateEmotionBars(data.emotions || {});
+
+                if (data.audio_url) {
+                    setStatus('Speaking...', 'speaking');
+                    const audio = new Audio(data.audio_url);
+                    audio.onended = () => setStatus('Press start to begin', '');
+                    audio.play();
+                } else {
+                    setStatus('Press start to begin', '');
+                }
+            } catch (err) {
+                hideTyping();
+                setStatus('Error — try again', '');
+                showToast('Could not connect to assistant. Is the server running?');
+            }
+        }
+
+        function updateEmotionBars(emotions) {
+            const emotionMap = {
+                Happy: '.happy', Sad: '.sad',
+                Angry: '.angry', Fear: '.fear', Surprise: '.surprise'
+            };
+            let dominant = 'Neutral'; let maxVal = 0;
+            const emojis = { Happy: '😊', Sad: '😢', Angry: '😠', Fear: '😨', Surprise: '😲', Neutral: '😐' };
+
+            document.querySelectorAll('.va-emotion-mini-row').forEach(row => {
+                const emo = row.dataset.emotion;
+                const val = (emotions[emo] || 0) * 100;
+                const fill = row.querySelector('.va-bar-fill');
+                if (fill) fill.style.width = val + '%';
+                if (val > maxVal) { maxVal = val; dominant = emo; }
+            });
+
+            document.getElementById('dominantEmotion').textContent =
+                (emojis[dominant] || '😐') + ' ' + dominant;
+        }
+
+        function resetConversation() {
+            document.getElementById('chatLog').innerHTML =
+                '<div class="va-empty-msg">How are you feeling today?</div>';
+            turnCount = 0;
+            document.getElementById('turnCount').textContent = '0';
+            document.getElementById('dominantEmotion').textContent = '😐 Neutral';
+            document.querySelectorAll('.va-bar-fill').forEach(b => b.style.width = '0%');
+            setStatus('Press start to begin', '');
+            fetch('/reset', { method: 'POST' }).catch(() => { });
+        }
+    </script>
+</body>
+
+</html>

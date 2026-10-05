@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DL-IFHP · Dual-Layer Intelligent Face Scan Health Platform</title>
+  <meta name="description" content="A next-generation dual-layer face-scan health platform extracting medical biosignals and mental-health affective signals simultaneously from non-contact video." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Noto+Sans+Mono:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+  <!-- ══════════════════════════════════════════════
+       LANDING / SPLASH
+  ══════════════════════════════════════════════ -->
+  <section id="splash" class="screen active">
+    <div class="splash-bg-grid"></div>
+    <div class="splash-center">
+      <div class="logo-ring" id="logoRing">
+        <svg class="logo-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="100" cy="100" r="90" stroke="white" stroke-width="0.6" stroke-dasharray="4 6" class="ring-outer"/>
+          <circle cx="100" cy="100" r="70" stroke="white" stroke-width="0.3" opacity="0.4"/>
+          <path d="M100 40 L100 160 M40 100 L160 100" stroke="white" stroke-width="0.4" opacity="0.3"/>
+          <circle cx="100" cy="100" r="18" fill="none" stroke="white" stroke-width="1.2"/>
+          <polygon points="100,82 112,108 88,108" fill="white" opacity="0.9"/>
+        </svg>
+        <div class="logo-pulse-ring"></div>
+        <div class="logo-pulse-ring delay-1"></div>
+      </div>
+      <h1 class="splash-title">DL · IFHP</h1>
+      <p class="splash-sub">Dual-Layer Intelligent Face Scan Health Platform</p>
+      <p class="splash-desc">Observing biology and behaviour through a single lens</p>
+      <div class="splash-badges">
+        <span class="badge">MEDICAL LAYER</span>
+        <span class="badge-sep">+</span>
+        <span class="badge">MENTAL LAYER</span>
+      </div>
+      <button class="btn-begin" id="btnBegin">Begin Assessment</button>
+    </div>
+    <div class="splash-footer">
+      <span class="mono">OBSERVE</span> <span class="sep">→</span>
+      <span class="mono">ANALYZE</span> <span class="sep">→</span>
+      <span class="mono">STABILIZE</span> <span class="sep">→</span>
+      <span class="mono">INTERPRET</span> <span class="sep">→</span>
+      <span class="mono">EXPLAIN</span>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       MODE SELECTOR
+  ══════════════════════════════════════════════ -->
+  <section id="modeSelect" class="screen">
+    <header class="top-bar">
+      <span class="platform-name">DL · IFHP</span>
+      <span class="session-id" id="sessionId">SESSION —</span>
+    </header>
+    <div class="mode-grid">
+      <button class="mode-card" id="btnMedical" data-mode="medical">
+        <div class="mode-icon">
+          <svg viewBox="0 0 64 64" fill="none"><rect x="29" y="8" width="6" height="48" rx="3" fill="white"/><rect x="8" y="29" width="48" height="6" rx="3" fill="white"/></svg>
+        </div>
+        <h2 class="mode-title">Medical Face Scan</h2>
+        <p class="mode-desc">Physiological biosignal extraction via remote photoplethysmographic imaging. Measures cardiac, respiratory, and autonomic signals non-invasively.</p>
+        <ul class="mode-params">
+          <li>Heart Rate (BPM)</li>
+          <li>Heart Rate Variability</li>
+          <li>SpO₂ Estimation</li>
+          <li>Blood Pressure Proxy</li>
+          <li>Respiration Rate</li>
+          <li>Fatigue Biomarkers</li>
+        </ul>
+        <div class="mode-cta">Launch Medical Scan →</div>
+      </button>
+
+      <button class="mode-card" id="btnMental" data-mode="mental">
+        <div class="mode-icon">
+          <svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="28" r="16" stroke="white" stroke-width="2"/><path d="M20 50 Q32 42 44 50" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="26" cy="26" r="2" fill="white"/><circle cx="38" cy="26" r="2" fill="white"/></svg>
+        </div>
+        <h2 class="mode-title">Mental Health Face Scan</h2>
+        <p class="mode-desc">Affective and cognitive state inference from facial muscle activation patterns, micro-expressions, and temporal emotional transitions.</p>
+        <ul class="mode-params">
+          <li>Emotional Probability Distribution</li>
+          <li>Stress Index</li>
+          <li>Anxiety Indicators</li>
+          <li>Emotional Stability Variance</li>
+          <li>Cognitive Fatigue</li>
+          <li>Engagement Estimation</li>
+        </ul>
+        <div class="mode-cta">Launch Mental Scan →</div>
+      </button>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       CAMERA SETUP / COACHING
+  ══════════════════════════════════════════════ -->
+  <section id="cameraSetup" class="screen">
+    <header class="top-bar">
+      <button class="btn-back" id="backToMode">← Back</button>
+      <span class="platform-name" id="setupModeName">MEDICAL SCAN</span>
+      <span class="session-id" id="setupSessionId">SESSION —</span>
+    </header>
+    <div class="setup-layout">
+      <!-- Live preview -->
+      <div class="camera-frame-wrap">
+        <video id="cameraFeed" autoplay muted playsinline></video>
+        <canvas id="overlayCanvas"></canvas>
+        <div class="face-guide-ring" id="faceGuideRing">
+          <div class="face-oval"></div>
+          <div class="face-hint" id="faceHint">Position your face in the oval</div>
+        </div>
+        <div class="quality-bar-wrap">
+          <div class="quality-label mono">SIGNAL QUALITY</div>
+          <div class="quality-bar"><div class="quality-fill" id="qualityFill"></div></div>
+          <div class="quality-value mono" id="qualityValue">—</div>
+        </div>
+      </div>
+      <!-- Coaching panel -->
+      <aside class="coaching-panel">
+        <h3 class="coaching-title">Environment Calibration</h3>
+        <div class="check-list" id="checkList">
+          <div class="check-item" id="chkLighting">
+            <span class="check-icon">○</span><span>Good lighting detected</span>
+          </div>
+          <div class="check-item" id="chkFace">
+            <span class="check-icon">○</span><span>Face fully visible</span>
+          </div>
+          <div class="check-item" id="chkMotion">
+            <span class="check-icon">○</span><span>Minimal head motion</span>
+          </div>
+          <div class="check-item" id="chkDistance">
+            <span class="check-icon">○</span><span>Optimal distance</span>
+          </div>
+        </div>
+        <div class="coaching-tips" id="coachingTips">
+          <p>Sit still, breathe naturally, and look directly at the camera.</p>
+          <p>Ensure light falls evenly on your face — avoid strong backlighting.</p>
+          <p>Remove glasses if possible to improve forehead ROI accuracy.</p>
+        </div>
+        <button class="btn-start-scan" id="btnStartScan" disabled>
+          <span class="btn-pulser"></span>
+          Start Scan
+        </button>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       MEDICAL SCAN ACTIVE
+  ══════════════════════════════════════════════ -->
+  <section id="medicalScan" class="screen">
+    <header class="top-bar">
+      <div class="scan-indicator">
+        <span class="scan-dot"></span>
+        <span class="mono">MEDICAL SCAN ACTIVE</span>
+      </div>
+      <div class="timer-wrap">
+        <span id="medTimer" class="mono timer">00:30</span>
+        <div class="timer-ring-wrap">
+          <svg class="timer-ring" viewBox="0 0 44 44">
+            <circle class="timer-track" cx="22" cy="22" r="18"/>
+            <circle class="timer-progress" id="timerProgress" cx="22" cy="22" r="18"/>
+          </svg>
+        </div>
+      </div>
+    </header>
+
+    <div class="scan-layout">
+      <!-- 3D Face mesh + camera -->
+      <div class="scan-face-panel">
+        <div class="face-video-wrap">
+          <video id="medCameraFeed" autoplay muted playsinline></video>
+          <canvas id="medFaceMesh" class="face-mesh-canvas"></canvas>
+          <canvas id="medRoiOverlay" class="roi-overlay"></canvas>
+        </div>
+        <div class="signal-quality-mini">
+          <span class="mono" id="medQualLabel">Q: —</span>
+          <div class="sq-bar"><div id="medQualFill" class="sq-fill"></div></div>
+        </div>
+        <div class="roi-legend">
+          <span class="roi-chip forehead">Forehead</span>
+          <span class="roi-chip cheek">Cheeks</span>
+          <span class="roi-chip temporal">Temporal</span>
+        </div>
+      </div>
+
+      <!-- Live waveform panel -->
+      <div class="waveform-panel">
+        <div class="waveform-block">
+          <div class="waveform-label mono">PULSE WAVEFORM (PPG)</div>
+          <canvas id="ppgCanvas" class="waveform-canvas"></canvas>
+        </div>
+        <div class="waveform-block">
+          <div class="waveform-label mono">RESPIRATION ENVELOPE</div>
+          <canvas id="respCanvas" class="waveform-canvas"></canvas>
+        </div>
+        <div class="live-metrics-grid">
+          <div class="live-metric" id="lmBpm">
+            <div class="lm-value" id="valBpm">—</div>
+            <div class="lm-label mono">BPM</div>
+            <div class="lm-conf" id="confBpm"></div>
+          </div>
+          <div class="live-metric" id="lmSpo2">
+            <div class="lm-value" id="valSpo2">—</div>
+            <div class="lm-label mono">SpO₂ %</div>
+            <div class="lm-conf" id="confSpo2"></div>
+          </div>
+          <div class="live-metric" id="lmHrv">
+            <div class="lm-value" id="valHrv">—</div>
+            <div class="lm-label mono">HRV ms</div>
+            <div class="lm-conf" id="confHrv"></div>
+          </div>
+          <div class="live-metric" id="lmResp">
+            <div class="lm-value" id="valResp">—</div>
+            <div class="lm-label mono">RESP/min</div>
+            <div class="lm-conf" id="confResp"></div>
+          </div>
+          <div class="live-metric" id="lmBp">
+            <div class="lm-value" id="valBp">—/—</div>
+            <div class="lm-label mono">BP mmHg</div>
+            <div class="lm-conf" id="confBp"></div>
+          </div>
+          <div class="live-metric" id="lmFatigue">
+            <div class="lm-value" id="valFatigue">—</div>
+            <div class="lm-label mono">FATIGUE</div>
+            <div class="lm-conf" id="confFatigue"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       MENTAL HEALTH SCAN ACTIVE
+  ══════════════════════════════════════════════ -->
+  <section id="mentalScan" class="screen">
+    <header class="top-bar">
+      <div class="scan-indicator">
+        <span class="scan-dot"></span>
+        <span class="mono">MENTAL SCAN ACTIVE</span>
+      </div>
+      <div class="timer-wrap">
+        <span id="menTimer" class="mono timer">00:30</span>
+        <div class="timer-ring-wrap">
+          <svg class="timer-ring" viewBox="0 0 44 44">
+            <circle class="timer-track" cx="22" cy="22" r="18"/>
+            <circle class="timer-progress" id="menTimerProgress" cx="22" cy="22" r="18"/>
+          </svg>
+        </div>
+      </div>
+    </header>
+
+    <div class="scan-layout">
+      <!-- Face with emotion heatmap -->
+      <div class="scan-face-panel">
+        <div class="face-video-wrap">
+          <video id="menCameraFeed" autoplay muted playsinline></video>
+          <canvas id="menFaceMesh" class="face-mesh-canvas"></canvas>
+          <canvas id="emotionHeatmap" class="emotion-heatmap"></canvas>
+        </div>
+        <div class="au-strip" id="auStrip">
+          <!-- Action unit activity bars rendered by JS -->
+        </div>
+        <div class="landmark-count mono" id="landmarkCount">Landmarks: —</div>
+      </div>
+
+      <!-- Emotion analysis panel -->
+      <div class="waveform-panel">
+        <div class="waveform-block">
+          <div class="waveform-label mono">EMOTIONAL STATE TIMELINE</div>
+          <canvas id="emotionTimeline" class="waveform-canvas"></canvas>
+        </div>
+
+        <div class="emotion-dist" id="emotionDist">
+          <!-- Probability bars for each emotion -->
+        </div>
+
+        <div class="live-metrics-grid">
+          <div class="live-metric">
+            <div class="lm-value" id="valStress">—</div>
+            <div class="lm-label mono">STRESS IDX</div>
+            <div class="lm-conf" id="confStress"></div>
+          </div>
+          <div class="live-metric">
+            <div class="lm-value" id="valAnxiety">—</div>
+            <div class="lm-label mono">ANXIETY</div>
+            <div class="lm-conf" id="confAnxiety"></div>
+          </div>
+          <div class="live-metric">
+            <div class="lm-value" id="valStability">—</div>
+            <div class="lm-label mono">STABILITY</div>
+            <div class="lm-conf" id="confStability"></div>
+          </div>
+          <div class="live-metric">
+            <div class="lm-value" id="valEngagement">—</div>
+            <div class="lm-label mono">ENGAGEMENT</div>
+            <div class="lm-conf" id="confEngagement"></div>
+          </div>
+          <div class="live-metric" style="grid-column: span 2;">
+            <div class="lm-value" id="valCognitiveFatigue">—</div>
+            <div class="lm-label mono">COGNITIVE FATIGUE</div>
+            <div class="lm-conf" id="confCognitiveFatigue"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       RESULTS / FUSION REPORT
+  ══════════════════════════════════════════════ -->
+  <section id="results" class="screen">
+    <header class="top-bar">
+      <span class="platform-name">INTELLIGENCE REPORT</span>
+      <button class="btn-restart" id="btnRestart">New Assessment</button>
+    </header>
+    <div class="results-layout" id="resultsLayout">
+      <!-- Dynamically populated by results.js -->
+    </div>
+  </section>
+
+  <!-- Scripts — order matters -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/signal_processor.js"></script>
+  <script src="js/medical_engine.js"></script>
+  <script src="js/mental_engine.js"></script>
+  <script src="js/fusion_engine.js"></script>
+  <script src="js/face_mesh.js"></script>
+  <script src="js/waveform_renderer.js"></script>
+  <script src="js/ui_controller.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

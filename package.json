@@ -1,0 +1,21 @@
+{
+  "name": "mindpulse-mentalhealth",
+  "version": "1.0.0",
+  "description": "MindPulse AI-Powered Mental Health Platform",
+  "main": "run.js",
+  "scripts": {
+    "dev": "node run.js",
+    "start": "node run.js",
+    "api": "VoiceAssis\\.venv\\Scripts\\python.exe -m uvicorn main:app --app-dir mindpulse-api --port 8001 --reload",
+    "voice": "VoiceAssis\\.venv\\Scripts\\python.exe -m uvicorn main:app --app-dir VoiceAssis --port 8000",
+    "frontend": "VoiceAssis\\.venv\\Scripts\\python.exe -m http.server 3000 --directory mentalhealth/mentalhealth"
+  },
+  "keywords": [
+    "mental-health",
+    "ai",
+    "fastapi",
+    "voice-assistant"
+  ],
+  "author": "",
+  "license": "ISC"
+}

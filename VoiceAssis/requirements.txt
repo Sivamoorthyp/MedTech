@@ -1,0 +1,35 @@
+# Emotional AI Assistant — Requirements
+# Install with: pip install -r requirements.txt
+
+# ── Web Framework ──
+fastapi==0.111.0
+uvicorn==0.30.1
+python-multipart==0.0.9
+aiofiles==23.2.1
+whisper==1.1.10
+edge-tts==6.1.11
+groq==0.8.0
+python-dotenv==1.0.1
+twilio==9.0.0
+
+# ── Speech to Text ──
+openai-whisper==20231117
+
+# ── Emotion Detection ──
+text2emotion==0.0.5
+# text2emotion requires these:
+nltk==3.8.1
+
+# ── LLM ──
+anthropic==0.25.0
+
+# ── Text to Speech ──
+TTS==0.22.0
+pyttsx3==2.90        # Fallback TTS
+
+# ── Audio Processing ──
+ffmpeg-python==0.2.0  # Whisper needs ffmpeg installed on the OS too
+
+# ── Utilities ──
+torch>=2.0.0          # Required by Whisper + Coqui (CPU version is fine)
+numpy>=1.24.0

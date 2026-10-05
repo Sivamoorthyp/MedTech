@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepPhys Care - Admin Dashboard</title>
+    <!-- Fonts: 'Nunito' -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="admin-saas-theme">
+
+    <!-- Top Navigation Bar -->
+    <header class="saas-navbar">
+        <div class="saas-nav-left">
+            <span class="saas-brand">DeepPhys Care &ndash; Admin Panel</span>
+        </div>
+        <div class="saas-nav-right">
+            <button class="icon-btn" aria-label="Notifications">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+            </button>
+            <div class="admin-profile">
+                <div class="profile-circle">AD</div>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="window.location.href='index.html'">Logout</button>
+        </div>
+    </header>
+
+    <main class="saas-main">
+        <div class="saas-container">
+
+            <!-- Welcome Section -->
+            <div class="welcome-section">
+                <div class="welcome-text">
+                    <h1>Welcome back, Admin.</h1>
+                    <p>Here is today&rsquo;s institutional mental wellness overview.</p>
+                </div>
+                <div class="welcome-date" id="currentDateDisplay">
+                    <!-- JS will populate: e.g., Oct 24, 2026 -->
+                </div>
+            </div>
+
+            <!-- Overview Metrics -->
+            <div class="metrics-grid">
+                <!-- Card 1 -->
+                <div class="metric-card">
+                    <span class="metric-label">Total Students Monitored</span>
+                    <div class="metric-value" id="totalStudents"></div>
+                    <hr class="metric-divider">
+                    <div class="metric-trend positive">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="19" x2="12" y2="5"></line>
+                            <polyline points="5 12 12 5 19 12"></polyline>
+                        </svg>
+                        <span>4% from last week</span>
+                    </div>
+                </div>
+                <!-- Card 2 -->
+                <div class="metric-card">
+                    <span class="metric-label">Active Today</span>
+                    <div class="metric-value" id="activeToday"></div>
+                    <hr class="metric-divider">
+                    <div class="metric-trend positive">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="19" x2="12" y2="5"></line>
+                            <polyline points="5 12 12 5 19 12"></polyline>
+                        </svg>
+                        <span>12% from yesterday</span>
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div class="metric-card">
+                    <span class="metric-label">Average Stress Level</span>
+                    <div class="metric-value" id="avgStress"></div>
+                    <hr class="metric-divider">
+                    <div class="metric-trend negative">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <polyline points="19 12 12 19 5 12"></polyline>
+                        </svg>
+                        <span>2% from last week</span>
+                    </div>
+                </div>
+                <!-- Card 4 (High Risk) -->
+                <div class="metric-card">
+                    <span class="metric-label">High Risk Cases</span>
+                    <div class="metric-value danger-text" id="highRiskCount"></div>
+                    <hr class="metric-divider">
+                    <div class="metric-trend negative">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="19" x2="12" y2="5"></line>
+                            <polyline points="5 12 12 5 19 12"></polyline>
+                        </svg>
+                        <span class="danger-text">8 new cases today</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Two Column Layout: Charts -->
+            <div class="saas-grid-2col">
+
+                <!-- Weekly Stress Trend -->
+                <div class="saas-card chart-section">
+                    <div class="card-header-flex">
+                        <h2>Weekly Stress Trend Analysis</h2>
+                        <select class="saas-select">
+                            <option>This Week</option>
+                            <option>This Month</option>
+                        </select>
+                    </div>
+                    <div class="chart-box">
+                        <div class="chart-lines">
+                            <div class="h-line"></div>
+                            <div class="h-line"></div>
+                            <div class="h-line"></div>
+                            <div class="h-line"></div>
+                        </div>
+                        <svg class="chart-path" viewBox="0 0 500 200" preserveAspectRatio="none">
+                            <path d="M0,150 Q50,120 100,140 T200,90 T300,110 T400,60 T500,80 L500,200 L0,200 Z"
+                                fill="rgba(37, 99, 235, 0.05)" stroke="#2563eb" stroke-width="2"></path>
+                        </svg>
+                        <div class="chart-x-axis">
+                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                        </div>
+                    </div>
+                    <p class="chart-summary">Stress levels increased by <strong>6%</strong> compared to last week.</p>
+                </div>
+
+                <!-- Risk Distribution -->
+                <div class="saas-card distribution-section">
+                    <h2>Risk Category Distribution</h2>
+                    <div class="dist-bars-container">
+                        <div class="dist-row">
+                            <div class="dist-label">
+                                <span>Low Risk</span>
+                                <span>52%</span>
+                            </div>
+                            <div class="dist-track">
+                                <div class="dist-fill bg-success" style="width: 52%"></div>
+                            </div>
+                        </div>
+                        <div class="dist-row">
+                            <div class="dist-label">
+                                <span>Medium Risk</span>
+                                <span>34%</span>
+                            </div>
+                            <div class="dist-track">
+                                <div class="dist-fill bg-warning" style="width: 34%"></div>
+                            </div>
+                        </div>
+                        <div class="dist-row">
+                            <div class="dist-label">
+                                <span>High Risk</span>
+                                <span>14%</span>
+                            </div>
+                            <div class="dist-track">
+                                <div class="dist-fill bg-danger" style="width: 14%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Middle Layout: Table & Insights -->
+            <div class="saas-grid-2col layout-flipped">
+
+                <!-- Department Overview Table -->
+                <div class="saas-card table-section">
+                    <h2>Department Stress Overview</h2>
+                    <div class="table-container-saas">
+                        <table class="saas-table">
+                            <thead>
+                                <tr>
+                                    <th>Department</th>
+                                    <th>Students Monitored</th>
+                                    <th>Avg Stress %</th>
+                                    <th>Risk Level</th>
+                                    <th>Action</th>
+                                    <th>Gender Count</th>
+                                </tr>
+                            </thead>
+                            <tbody id="departmentTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- AI Insights -->
+                <div class="saas-card insights-section">
+                    <div class="insights-header">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        <h2>AI Insights</h2>
+                    </div>
+                    <ul class="insights-list" id="aiInsightsList">
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- High Risk Students Card List -->
+            <div class="saas-section">
+                <h2 class="section-title">Students Requiring Immediate Attention</h2>
+                <div class="student-card-list" id="highRiskList">
+
+                    <!-- Card 1 -->
+                    <div class="student-list-row">
+                        <div class="student-info">
+                            <div class="profile-circle-sm">AJ</div>
+                            <div>
+                                <h4 class="student-name">Alex Johnson</h4>
+                                <span class="student-dept">Electronics (ECE)</span>
+                            </div>
+                        </div>
+                        <div class="student-stats">
+                            <div class="stat-col">
+                                <span class="stat-lbl">Stress %</span>
+                                <span class="stat-val danger-text">88%</span>
+                            </div>
+                            <div class="stat-col">
+                                <span class="pill pill-danger">High Risk</span>
+                            </div>
+                        </div>
+                        <div class="student-action">
+                            <button class="btn btn-outline btn-sm">Schedule Support</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="student-list-row">
+                        <div class="student-info">
+                            <div class="profile-circle-sm">SW</div>
+                            <div>
+                                <h4 class="student-name">Sarah Williams</h4>
+                                <span class="student-dept">Computer Science (CSE)</span>
+                            </div>
+                        </div>
+                        <div class="student-stats">
+                            <div class="stat-col">
+                                <span class="stat-lbl">Stress %</span>
+                                <span class="stat-val danger-text">82%</span>
+                            </div>
+                            <div class="stat-col">
+                                <span class="pill pill-danger">High Risk</span>
+                            </div>
+                        </div>
+                        <div class="student-action">
+                            <button class="btn btn-outline btn-sm">Schedule Support</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="student-list-row">
+                        <div class="student-info">
+                            <div class="profile-circle-sm">ED</div>
+                            <div>
+                                <h4 class="student-name">Emma Davis</h4>
+                                <span class="student-dept">Mechanical Eng.</span>
+                            </div>
+                        </div>
+                        <div class="student-stats">
+                            <div class="stat-col">
+                                <span class="stat-lbl">Stress %</span>
+                                <span class="stat-val danger-text">85%</span>
+                            </div>
+                            <div class="stat-col">
+                                <span class="pill pill-danger">High Risk</span>
+                            </div>
+                        </div>
+                        <div class="student-action">
+                            <button class="btn btn-outline btn-sm">Schedule Support</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="saas-footer">
+        <p>&copy; 2026 DeepPhys Care &ndash; Admin Dashboard</p>
+    </footer>
+
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Set Today's Date in Welcome Section
+        const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('currentDateDisplay').textContent = new Date().toLocaleDateString('en-US', dateOptions);
+    </script>
+    <script src="admin.js"></script>
+</body>
+
+</html>

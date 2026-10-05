@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepPhys Care - AI-Powered Mental Health</title>
+    <!-- Fonts: 'Playfair Display' for Headings, 'Inter' for Body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="page-background"></div>
+
+    <header class="navbar fade-in-down">
+        <div class="logo">MindPulse</div>
+        <nav class="nav-links">
+            <a href="#dashboard">Dashboard</a>
+            <a href="#Chat">Chat</a>
+            <a href="http://localhost:8000" target="_blank">Speak</a>
+            <a href="api_keys.html">API Keys</a>
+            <a href="#Counselling Appointment">Counselling Appointment</a>
+        </nav>
+        <div class="nav-actions">
+            <button class="btn btn-dark-rounded" id="openLoginBtn">Login</button>
+        </div>
+        <!-- Mobile Menu Toggle (optional) -->
+        <button class="mobile-menu-btn" aria-label="Toggle Menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <div class="hero-content fade-in-up">
+                <h1 class="hero-title">AI-Powered<br>Mental Health Monitoring</h1>
+                <h2 class="hero-subtitle">Early detection. Real-time support. 24/7 AI care.</h2>
+                <p class="hero-text">Designed for students and institutions. Secure, private, and multilingual.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary">Start Face Scan</button>
+                </div>
+            </div>
+
+            <div class="hero-visual fade-in-right">
+                <div class="chatbot-card glassmorphism float-animation">
+                    <div class="card-header">
+                        <div class="header-indicator"></div>
+                        <span>DeepPhys Assistant</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="message user-message">
+                            <p>I’ve been feeling stressed and overwhelmed with exams.</p>
+                        </div>
+                        <div class="message ai-message">
+                            <div class="ai-avatar">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path
+                                        d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-1c0 3.87-3.13 7-7 7H9c-3.87 0-7-3.13-7-7H1a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h1a7 7 0 0 1 7-7h1V5.73A2 2 0 0 1 10 4a2 2 0 0 1 2-2z">
+                                    </path>
+                                    <circle cx="9" cy="13" r="1.5"></circle>
+                                    <circle cx="15" cy="13" r="1.5"></circle>
+                                </svg>
+                            </div>
+                            <p>I’m here to help. Let’s start with a quick stress check.</p>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="input-mockup">Type your message...</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Problem Section -->
+        <section class="problem-section fade-in-up">
+            <div class="section-header">
+                <h2>Why Mental Health Monitoring Matters</h2>
+            </div>
+            <div class="problem-grid">
+                <!-- Card 1 -->
+                <div class="problem-card">
+                    <h3>Rising Student Stress</h3>
+                    <p>Academic pressure, social isolation, and digital burnout are increasing mental health risks.</p>
+                </div>
+                <!-- Card 2 -->
+                <div class="problem-card">
+                    <h3>Delayed Intervention</h3>
+                    <p>Many students seek help only after stress becomes severe.</p>
+                </div>
+                <!-- Card 3 -->
+                <div class="problem-card">
+                    <h3>Limited Counsellor Access</h3>
+                    <p>Traditional support systems are not available 24/7.</p>
+                </div>
+                <!-- Card 4 -->
+                <div class="problem-card">
+                    <h3>Lack of Institutional Insights</h3>
+                    <p>Colleges lack centralized stress trend monitoring.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="features-section fade-in-up">
+            <div class="section-header">
+                <h2>Core Features</h2>
+            </div>
+            <div class="features-grid">
+                <!-- Card 1 -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 5h4a2 2 0 0 1 2 2v2"></path>
+                            <path d="M19 5h-4a2 2 0 0 0-2 2v2"></path>
+                            <path d="M5 19h4a2 2 0 0 0 2-2v-2"></path>
+                            <path d="M19 19h-4a2 2 0 0 1-2-2v-2"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </div>
+                    <h3>Face Scan</h3>
+                    <p>AI-powered facial analysis to detect stress and emotional state in real-time.</p>
+                </div>
+                <!-- Card 2 -->
+                <a href="http://localhost:8000" target="_blank" class="feature-card feature-card-link">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                            <line x1="12" x2="12" y1="19" y2="22"></line>
+                        </svg>
+                    </div>
+                    <h3>AI Voice Assistant</h3>
+                    <p>Speak naturally and receive intelligent emotional support and guidance.</p>
+                </a>
+                <!-- Card 3 -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </div>
+                    <h3>24/7 AI Chatbot</h3>
+                    <p>Always-available conversational support for mental wellness and stress check.</p>
+                </div>
+                <!-- Card 4 -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3>Menstrual Cycle Support</h3>
+                    <p>Personalized mood and stress insights based on hormonal cycle tracking.</p>
+                </div>
+            </div>
+        </section>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="how-it-works-section fade-in-up">
+            <div class="section-header">
+                <h2>How DeepPhys Care Works</h2>
+            </div>
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Scan or Chat</h3>
+                    <p>User interacts via camera or chatbot.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>AI Analysis</h3>
+                    <p>Facial, physiological, and text signals are analyzed.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Risk Classification</h3>
+                    <p>AI classifies stress into Low, Medium, or High.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3>Personalized Support</h3>
+                    <p>User receives recommendations or counsellor referral.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- System Modes Section -->
+        <section class="modes-section fade-in-up">
+            <div class="section-header">
+                <h2>Built for Every User</h2>
+            </div>
+            <div class="modes-grid">
+                <div class="mode-card">
+                    <div class="mode-icon">🎓</div>
+                    <h3>Student Mode</h3>
+                    <p>Daily reports, stress tracking, and guided exercises.</p>
+                </div>
+                <div class="mode-card">
+                    <div class="mode-icon">🏢</div>
+                    <h3>Admin Mode</h3>
+                    <p>Department-level stress analytics and trend monitoring.</p>
+                </div>
+                <div class="mode-card">
+                    <div class="mode-icon">🌍</div>
+                    <h3>Public Mode</h3>
+                    <p>Anonymous stress check without registration.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Innovation Section -->
+        <section class="innovation-section fade-in-up">
+            <div class="section-header">
+                <h2>Powered by Advanced AI</h2>
+            </div>
+            <div class="innovation-box glassmorphism">
+                <ul class="innovation-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        DeepPhys-based remote physiological signal extraction
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        PHQ-9 & GAD-7 assessment integration
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Multimodal machine learning classification
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        NLP-based emotional tone detection
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Multilingual AI chatbot support
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Privacy Section -->
+        <section class="privacy-section fade-in-up">
+            <div class="section-header">
+                <h2>Privacy & Security First</h2>
+            </div>
+            <div class="privacy-grid">
+                <div class="privacy-item">
+                    <div class="privacy-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                    </div>
+                    <p>Secure encrypted data</p>
+                </div>
+                <div class="privacy-item">
+                    <div class="privacy-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                    </div>
+                    <p>Consent-based camera access</p>
+                </div>
+                <div class="privacy-item">
+                    <div class="privacy-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </div>
+                    <p>Anonymous public mode</p>
+                </div>
+                <div class="privacy-item">
+                    <div class="privacy-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                        </svg>
+                    </div>
+                    <p>Institution-level anonymized analytics</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA Section -->
+        <section class="cta-section fade-in-up">
+            <div class="cta-content glassmorphism">
+                <h2>Start Your Mental Wellness Journey Today</h2>
+                <button class="btn btn-primary cta-btn">Begin Face Scan</button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Optional script for basic interactions 
+        // e.g., mobile menu toggle and intersection observer for scroll animations.
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in-up, .fade-in-down, .fade-in-right').forEach((el) => {
+                el.style.animationPlayState = 'paused';
+                observer.observe(el);
+            });
+        });
+    </script>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="login-modal glassmorphism">
+            <button class="close-modal-btn" id="closeModalBtn" aria-label="Close modal">&times;</button>
+
+            <div class="modal-header">
+                <h2>Welcome Back</h2>
+                <p>Select your role to continue</p>
+            </div>
+
+            <div class="role-tabs">
+                <button class="role-tab active" data-role="student">Student</button>
+                <button class="role-tab" data-role="admin">Admin</button>
+                <button class="role-tab" data-role="public">Public</button>
+            </div>
+
+            <div class="modal-forms">
+                <!-- Student Form -->
+                <form id="studentForm" class="role-form active">
+                    <div class="form-group">
+                        <label for="studentEmail">Email</label>
+                        <input type="email" id="studentEmail" placeholder="Enter your email" required>
+                        <span class="error-msg">Email is required</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="studentRoll">Roll Number</label>
+                        <input type="text" id="studentRoll" placeholder="Enter your roll number" required>
+                        <span class="error-msg">Roll number is required</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="studentPassword">Password</label>
+                        <input type="password" id="studentPassword" placeholder="Enter your password" required
+                            minlength="6">
+                        <span class="error-msg">Password must be at least 6 characters</span>
+                    </div>
+                    <div class="form-options">
+                        <a href="#" class="forgot-pwd">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full submit-btn">
+                        <span class="btn-text">Login as Student</span>
+                        <div class="loader"></div>
+                    </button>
+                </form>
+
+                <!-- Admin Form -->
+                <form id="adminForm" class="role-form">
+                    <div class="form-group">
+                        <label for="adminEmail">Email</label>
+                        <input type="email" id="adminEmail" placeholder="Enter admin email" required>
+                        <span class="error-msg">Email is required</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="adminPassword">Password</label>
+                        <input type="password" id="adminPassword" placeholder="Enter admin password" required
+                            minlength="6">
+                        <span class="error-msg">Password must be at least 6 characters</span>
+                    </div>
+                    <div class="form-options">
+                        <a href="#" class="forgot-pwd">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full submit-btn">
+                        <span class="btn-text">Login as Admin</span>
+                        <div class="loader"></div>
+                    </button>
+                </form>
+
+                <!-- Public Form -->
+                <form id="publicForm" class="role-form">
+                    <div class="form-group">
+                        <label for="publicEmail">Email</label>
+                        <input type="email" id="publicEmail" placeholder="Enter your email" required>
+                        <span class="error-msg">Email is required</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="publicPassword">Password</label>
+                        <input type="password" id="publicPassword" placeholder="Enter your password" required
+                            minlength="6">
+                        <span class="error-msg">Password must be at least 6 characters</span>
+                    </div>
+                    <div class="form-options">
+                        <a href="#" class="forgot-pwd">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full submit-btn">
+                        <span class="btn-text">Login as Public</span>
+                        <div class="loader"></div>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="login.js"></script>
+</body>
+
+</html>

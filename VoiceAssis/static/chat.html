@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Text Chatbot | MindPulse</title>
+    <meta name="description" content="MindPulse Text Chatbot for Emotional AI support.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Base style -->
+    <link rel="stylesheet" href="/static/css/style.css" />
+    
+    <style>
+        /* Premium ChatGPT/Claude/Notion AI UI Overrides */
+        
+        :root {
+            --primary:black;
+            --primary-hover:black;
+            --secondary: #F8FAFC;
+            --bg-white: #FFFFFF;
+            --text-main: #111827;
+            --text-light: #9CA3AF;
+            --border: #E5E7EB;
+            --font-main: 'Inter', sans-serif;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: var(--bg-white);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            overflow: hidden;
+        }
+
+        .page-bg, .navbar { display: none !important; }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* ─── SCROLLBAR ─── */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        /* ─── SIDEBAR ─── */
+        .sidebar {
+            width: 260px;
+            background-color: var(--secondary);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 15px;
+            box-sizing: border-box;
+            transition: all 0.25s ease;
+        }
+
+        .new-chat-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            height: 48px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background: var(--bg-white);
+            color: var(--text-main);
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 15px;
+            margin-bottom: 24px;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,.02);
+        }
+        .new-chat-btn:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 8px 18px rgba(16,185,129,.10);
+            transform: scale(1.02);
+        }
+
+        .sidebar-history {
+            flex: 1;
+            overflow-y: auto;
+        }
+        .history-title {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-bottom: 12px;
+            padding-left: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .history-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-main);
+            transition: all 0.2s ease;
+            margin-bottom: 4px;
+        }
+        .history-item.active {
+            background: #DCFCE7;
+            border-left: 4px solid var(--primary);
+            color: #065F46;
+        }
+        .history-item:not(.active):hover {
+            background: #F3F4F6;
+            transform: translateX(2px);
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            border-top: 1px solid var(--border);
+            padding-top: 15px;
+        }
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            color: var(--text-main);
+            border-radius: 10px;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.25s ease;
+        }
+        .back-btn:hover {
+            background: #F3F4F6;
+            transform: scale(1.02);
+        }
+
+        /* ─── MAIN CHAT ─── */
+        .main-chat {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-white);
+            position: relative;
+        }
+
+        /* ─── HEADER ─── */
+        .chat-header-gpt {
+            height: 72px;
+            padding: 0 30px;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        
+        .chat-title-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px; /* Title size up to 32px is a bit large for header, settling on 24px */
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+        }
+
+        .emotion-panel {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #DCFCE7;
+            border: 1px solid rgba(16,185,129,0.2);
+            padding: 6px 16px;
+            border-radius: 999px;
+            box-shadow: 0 2px 8px rgba(16,185,129,0.1);
+        }
+        .emotion-mini-row { display: none; }
+        #dominantEmotion { 
+            font-size: 14px; 
+            color: #065F46; 
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ─── CHAT MESSAGES AREA ─── */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            align-items: center; /* Center naturally */
+        }
+        
+        .chat-messages::-webkit-scrollbar { width: 6px; }
+
+        .empty-message {
+            color: var(--text-light);
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 15vh;
+            letter-spacing: -0.5px;
+        }
+
+        /* Override app.js message structure */
+        .message {
+            width: 100%;
+            max-width: 700px;
+            margin-bottom: 24px;
+            display: flex;
+            animation: messageAppear 0.25s ease-out forwards;
+            background: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+        }
+
+        @keyframes messageAppear {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* User Message */
+        .message.user {
+            justify-content: flex-end;
+        }
+        .message.user .bubble {
+            background: var(--primary) !important;
+            color: var(--bg-white) !important;
+            padding: 16px 22px !important;
+            border-radius: 20px !important;
+            border-top-right-radius: 6px !important;
+            box-shadow: 0 8px 20px rgba(16,185,129,.15) !important;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.6;
+            max-width: 85%;
+            transition: all 0.2s ease;
+        }
+        
+        /* AI Message */
+        .message.assistant {
+            justify-content: flex-start;
+            position: relative;
+            padding-left: 48px !important; /* Space for avatar */
+        }
+        .message.assistant::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 32px;
+            height: 32px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            /* White bot icon SVG */
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>');
+            background-size: 18px;
+            background-position: center;
+            background-repeat: no-repeat;
+            box-shadow: 0 4px 10px rgba(16,185,129,.2);
+        }
+        .message.assistant .bubble {
+            background: var(--secondary) !important;
+            border: 1px solid var(--border) !important;
+            color: var(--text-main) !important;
+            padding: 18px 22px !important;
+            border-radius: 20px !important;
+            border-top-left-radius: 6px !important;
+            box-shadow: 0 4px 14px rgba(0,0,0,.04) !important;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.6;
+            max-width: 85%;
+            transition: all 0.2s ease;
+        }
+
+        .bubble:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(0,0,0,.08) !important;
+        }
+
+        .message .bubble p { margin: 0; }
+        .time { display: none; } /* Clean look */
+        .emotion-tag { display: none; } /* Hide emotion text inside bubbles since we have header */
+
+        /* ─── MEDICAL REPORT STYLES ─── */
+        .report-section-title {
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #10B981;
+            margin: 14px 0 6px 0;
+            padding-bottom: 4px;
+            border-bottom: 2px solid #D1FAE5;
+        }
+        .report-section-title:first-child {
+            margin-top: 0;
+        }
+        .report-bullets {
+            margin: 6px 0 6px 0;
+            padding-left: 18px;
+            list-style: none;
+        }
+        .report-bullets li {
+            position: relative;
+            padding-left: 14px;
+            margin-bottom: 5px;
+            line-height: 1.55;
+            font-size: 15px;
+            color: #1F2937;
+        }
+        .report-bullets li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #10B981;
+            font-weight: 700;
+        }
+        .report-text {
+            display: block;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #374151;
+            margin: 3px 0;
+            padding: 0;
+        }
+        p.report-text {
+            margin: 3px 0;
+            padding: 0;
+        }
+        .message.assistant .bubble p {
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* ─── INPUT AREA ─── */
+        .chat-input-area {
+            padding: 20px 20px 30px 20px;
+            background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 30%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .chat-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: var(--bg-white);
+            border: 1px solid #D1D5DB;
+            border-radius: 999px;
+            box-shadow: 0 6px 18px rgba(0,0,0,.06);
+            padding: 5px 6px 5px 24px;
+            width: 100%;
+            max-width: 700px;
+            height: 62px;
+            box-sizing: border-box;
+            transition: all 0.25s ease;
+        }
+        .chat-input-wrapper:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(16,185,129,.15), 0 6px 18px rgba(0,0,0,.06);
+        }
+
+        .chat-input-wrapper input {
+            flex: 1;
+            border: none;
+            padding: 0;
+            font-size: 16px;
+            font-family: var(--font-main);
+            background: transparent;
+            color: var(--text-main);
+            outline: none;
+        }
+        .chat-input-wrapper input::placeholder {
+            color: var(--text-light);
+        }
+
+        /* Send Button */
+        .chat-input-wrapper button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 52px;
+            height: 52px;
+            background: var(--primary);
+            border: none;
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 10px rgba(16,185,129,.2);
+            flex-shrink: 0;
+        }
+        .chat-input-wrapper button:hover { 
+            background: var(--primary-hover); 
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(16,185,129,.35);
+        }
+        .chat-input-wrapper button:active {
+            transform: scale(0.95);
+        }
+
+        .footer-note {
+            text-align: center; 
+            color: var(--text-light); 
+            font-size: 12px; 
+            margin-top: 16px;
+        }
+
+        #volumeMeter, .status-row, .speak-controls { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <button class="new-chat-btn" onclick="startNewChat()">
+                <i data-lucide="plus" style="width:18px;height:18px;"></i> New Chat
+            </button>
+            <div class="sidebar-history">
+                <div class="history-title">Today</div>
+                <div class="history-item active">
+                    <i data-lucide="message-square" style="width:18px;height:18px;color:#10B981"></i>
+                    Emotional Support
+                </div>
+                <div class="history-item">
+                    <i data-lucide="message-square" style="width:18px;height:18px;"></i>
+                    Check-in Session
+                </div>
+            </div>
+            <div class="sidebar-bottom">
+                <button class="back-btn" onclick="window.location.href='/'">
+                    <i data-lucide="arrow-left" style="width:18px;height:18px;"></i>
+                    Back to Voice
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Chat -->
+        <div class="main-chat">
+            <div class="chat-header-gpt">
+                <div class="chat-title-group">
+                    <i data-lucide="bot" style="color:#10B981; width:28px; height:28px;"></i>
+                    MindPulse
+                </div>
+                
+                <div class="emotion-panel" id="emotionDisplay">
+                    <div id="dominantEmotion">
+                        <i data-lucide="smile" style="width:16px;height:16px;"></i> Neutral
+                    </div>
+                </div>
+            </div>
+
+            <div id="chatLog" class="chat-messages">
+                <div class="empty-message">How can I help you today?</div>
+            </div>
+
+            <div class="chat-input-area">
+                <div class="chat-input-wrapper">
+                    <input type="text" id="chatInput" placeholder="Ask anything..." onkeypress="handleEnter(event)" />
+                    <button id="sendTextBtn" onclick="sendTextMessage()">
+                        <i data-lucide="send" style="width:20px;height:20px;margin-left:-2px;"></i>
+                    </button>
+                </div>
+                <div class="footer-note">
+                    MindPulse AI can make mistakes. Consider verifying important information.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="errorToast"></div>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Mock audio components so app.js doesn't fail
+        class AudioRecorder {
+            async start() { return { success: true }; }
+            async stop() { return { blob: new Blob() }; }
+            getVolume() { return 0; }
+        }
+        class AudioPlayer {
+            constructor(opts) { this.opts = opts; }
+            play(url) { if (this.opts.onEnd) setTimeout(this.opts.onEnd, 1000); }
+        }
+    </script>
+    <script src="/static/js/app.js"></script>
+
+    <script>
+        // Custom History Manager for the Text Chatbot
+        const chatManager = {
+            sessions: JSON.parse(localStorage.getItem('mindpulse_chats')) || [],
+            currentEmotion: { dominant: "Neutral", bg: "#F3F4F6", color: "#6B7280", icon: "meh" },
+            
+            saveCurrent() {
+                const log = document.getElementById('chatLog');
+                // Only save if there is an actual conversation (user messages exist)
+                if (log.querySelectorAll('.message.user').length > 0) {
+                    const firstUserMsg = log.querySelector('.message.user p');
+                    const title = firstUserMsg ? firstUserMsg.innerText.substring(0, 25) + "..." : "Chat Session";
+                    const html = log.innerHTML;
+                    const id = state.sessionId;
+                    
+                    const existing = this.sessions.find(s => s.id === id);
+                    if (existing) {
+                        existing.html = html;
+                        existing.title = title;
+                        existing.emotion = this.currentEmotion;
+                    } else {
+                        this.sessions.unshift({ 
+                            id, title, html, date: new Date().toISOString(), emotion: this.currentEmotion 
+                        });
+                    }
+                    localStorage.setItem('mindpulse_chats', JSON.stringify(this.sessions));
+                }
+            },
+            
+            renderSidebar() {
+                const sidebar = document.querySelector('.sidebar-history');
+                sidebar.innerHTML = '<div class="history-title">Your Chats</div>';
+                
+                this.sessions.forEach(session => {
+                    const isActive = session.id === state.sessionId;
+                    const item = document.createElement('div');
+                    item.className = 'history-item' + (isActive ? ' active' : '');
+                    item.innerHTML = `
+                        <i data-lucide="message-square" style="width:18px;height:18px;${isActive ? 'color:#10B981' : ''}"></i>
+                        ${escapeHtml(session.title)}
+                    `;
+                    item.onclick = () => this.loadSession(session.id);
+                    sidebar.appendChild(item);
+                });
+                
+                if (window.lucide) lucide.createIcons();
+            },
+            
+            loadSession(id) {
+                this.saveCurrent(); // save current before switching
+                const session = this.sessions.find(s => s.id === id);
+                if (session) {
+                    state.sessionId = id;
+                    document.getElementById('chatLog').innerHTML = session.html;
+                    this.renderSidebar();
+                    
+                    // Restore emotion state
+                    if (session.emotion) {
+                        this.currentEmotion = session.emotion;
+                        this.applyEmotionUI();
+                    } else {
+                        window.updateEmotionDisplay("Neutral");
+                    }
+                    
+                    // Reset backend conversation memory (if needed, but usually just visual is enough)
+                    // We also ensure it scrolls to bottom
+                    const chat = document.getElementById("chatLog");
+                    chat.scrollTop = chat.scrollHeight;
+                }
+            },
+            
+            startNewChat() {
+                this.saveCurrent();
+                state.sessionId = "sess_" + Math.random().toString(36).slice(2, 11);
+                document.getElementById('chatLog').innerHTML = '<div class="empty-message">How can I help you today?</div>';
+                window.updateEmotionDisplay("Neutral");
+                this.renderSidebar();
+            },
+
+            applyEmotionUI() {
+                const panel = document.getElementById("emotionDisplay");
+                const domEl = document.getElementById("dominantEmotion");
+                if (panel && domEl) {
+                    panel.style.backgroundColor = this.currentEmotion.bg;
+                    panel.style.borderColor = this.currentEmotion.color + "40"; // 25% opacity
+                    domEl.innerHTML = `<i data-lucide="${this.currentEmotion.icon}" style="width:16px;height:16px;color:${this.currentEmotion.color}"></i> <span style="color:${this.currentEmotion.color}">${this.currentEmotion.dominant}</span>`;
+                    if (window.lucide) lucide.createIcons({ root: domEl });
+                }
+            }
+        };
+
+        // Override standard behavior
+        function startNewChat() {
+            chatManager.startNewChat();
+        }
+
+        // Override emotion display to use premium Lucide icons & colors
+        window.updateEmotionDisplay = function(dominant, scores) {
+            let icon = "meh";
+            let color = "#6B7280"; // Gray
+            let bg = "#F3F4F6";
+            
+            switch(dominant) {
+                case "Happy": icon = "smile"; color = "#10B981"; bg = "#DCFCE7"; break;
+                case "Sad": icon = "frown"; color = "#3B82F6"; bg = "#DBEAFE"; break;
+                case "Angry": icon = "angry"; color = "#EF4444"; bg = "#FEE2E2"; break;
+                case "Fear": icon = "alert-circle"; color = "#F59E0B"; bg = "#FEF3C7"; break;
+                case "Surprise": icon = "zap"; color = "#8B5CF6"; bg = "#EDE9FE"; break;
+                case "Neutral":
+                default: icon = "meh"; color = "#6B7280"; bg = "#F3F4F6"; break;
+            }
+
+            chatManager.currentEmotion = { dominant, bg, color, icon };
+            chatManager.applyEmotionUI();
+        }
+
+        // We wrap the original addMessage to trigger saving and sidebar updating automatically
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                chatManager.renderSidebar();
+                
+                // Wrap handleResponse in app.js to auto-save after response is added
+                if (typeof handleResponse === 'function') {
+                    const originalHandleResponse = handleResponse;
+                    window.handleResponse = function(data) {
+                        originalHandleResponse.apply(this, arguments);
+                        chatManager.saveCurrent();
+                        chatManager.renderSidebar();
+                    }
+                }
+            }, 200);
+        });
+    </script>
+</body>
+</html>
